@@ -1,0 +1,29 @@
+.container{
+    margin-top: 50px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
+}
+
+.save-btn-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.save-btn{
+    width: 200px;
+    border-radius: 8px;
+}
+
+.expense-heading{
+    text-align: center;
+    font-family: "Radio Canada Big", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.edit-img{
+    height: 15px;
+}

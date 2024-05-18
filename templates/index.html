@@ -1,0 +1,177 @@
+{% extends 'base.html' %} {% load static %} {% load humanize %} {% block body %}
+{% if request.user.is_authenticated %}
+<div class="container">
+  <h1 class="expense-heading">Add Expense ➕</h1>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row g-3">
+      <div class="col-sm-4">
+        <label for="inputEmail3" class="col-form-label">Expense Name: </label>
+        {{ expense_form.name }}
+      </div>
+      <div class="col-sm-4">
+        <label for="inputEmail3" class="col-form-label">Amount (in ₹): </label>
+        {{ expense_form.amount }}
+      </div>
+      <div class="col-sm-4">
+        <label for="inputEmail3" class="col-form-label">Category: </label>
+        {{ expense_form.category }}
+      </div>
+      <div class="save-btn-container">
+        <button type="submit" class="btn btn-primary save-btn">Save</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <h1 class="expense-heading">Expenses 💲</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Expense Name</th>
+        <th scope="col">Amount (in ₹)</th>
+        <th scope="col">Category</th>
+        <th scope="col">Date</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for expense in expenses %} {% if expense.user == request.user %}
+      <tr>
+        <td>{{ expense.name }}</td>
+        <td>₹{{ expense.amount|intcomma }}</td>
+        <td>{{ expense.category }}</td>
+        <td>{{ expense.date }}</td>
+        <td>
+          <form
+            action="{% url 'myapp:edit_expense' expense.id %}"
+            method="POST"
+          >
+            {% csrf_token %}
+            <button type="submit">
+              <img
+                src="{% static 'images/edit.png' %}"
+                alt=""
+                style="height: 15px"
+              />
+            </button>
+          </form>
+        </td>
+        <td>
+          <form
+            action="{% url 'myapp:delete_expense' expense.id %}"
+            method="POST"
+          >
+            {% csrf_token %}
+            <button type="submit" name="delete">
+              <img
+                src="{% static 'images/delete.png' %}"
+                alt=""
+                style="height: 15px"
+              />
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endif %} {% endfor %}
+    </tbody>
+  </table>
+  <br />
+  <h1 class="expense-heading">
+    Total Expense:<span style="color: green"
+      >₹ {{ total_expense.amount__sum|intcomma }}</span
+    >
+  </h1>
+</div>
+
+<div
+  style="
+    display: flex;
+    justify-content: space-between;
+    padding: 50px;
+    gap: 20px;
+  "
+>
+  <div class="container">
+    <h3>
+      Yearly Expense:
+      <span style="color: green"
+        >₹ {{ last_year_expense.amount__sum|intcomma }}</span
+      >
+    </h3>
+  </div>
+  <div class="container">
+    <h3>
+      Monthly Expense:
+      <span style="color: green"
+        >₹ {{ last_month_expense.amount__sum|intcomma }}</span
+      >
+    </h3>
+  </div>
+  <div class="container">
+    <h3>
+      Weekly Expense:
+      <span style="color: green"
+        >₹ {{ last_week_expense.amount__sum|intcomma }}</span
+      >
+    </h3>
+  </div>
+</div>
+
+<div
+  style="
+    display: flex;
+    justify-content: space-between;
+    padding: 50px;
+    gap: 20px;
+  "
+>
+  <div class="container" style="width: 450px">
+    <h3 style="text-align: center">Past 30 days sum expense</h3>
+    <hr />
+    <table class="table table-borderless">
+      <thead>
+        <tr>
+          <th scope="col">Dates</th>
+          <th scope="col">Expense</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for daily in daily_expense %}
+        <tr>
+          <th scope="row">{{ daily.date }}</th>
+          <td style="color: green; font-weight: bolder">₹{{ daily.sum }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="container" style="width: 450px" id="cat-sum-table">
+    <h3 style="text-align: center">Categorical Expense</h3>
+    <hr />
+    <table class="table table-borderless">
+      <thead>
+        <tr>
+          <th scope="col">Category</th>
+          <th scope="col">Expense</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in category_expense %}
+        <tr>
+          <th scope="row">{{ category.category }}</th>
+          <td style="color: green; font-weight: bolder">₹{{ category.sum }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<h1 class="expense-heading" style="text-align: center; margin-top: 10px">
+  Please Login or Register
+</h1>
+{% endif %}
+{% endblock %}

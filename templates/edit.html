@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<div class="container">
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row g-3">
+      <div class="col-sm-4">
+        <label for="inputEmail3" class="col-form-label">Expense Name: </label>
+        {{ expense_form.name }}
+      </div>
+      <div class="col-sm-4">
+        <label for="inputEmail3" class="col-form-label">Amount: </label>
+        {{ expense_form.amount }}
+      </div>
+      <div class="col-sm-4">
+        <label for="inputEmail3" class="col-form-label">Category: </label>
+        {{ expense_form.category }}
+      </div>
+      <div class="save-btn-container">
+        <button type="submit" class="btn btn-primary save-btn">Edit</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
